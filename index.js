@@ -1,12 +1,5 @@
 
-// What would you like to do?
-// View Employees
-// View Departments
-// View Roles
-// Add Employees
-// Add Departments
-// Add Roles
-// Update Employee Roles
+
 
 // View All Employees
 // View All Employees by Department
@@ -30,23 +23,72 @@
 
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-
-// create the connection information for the sql database
-const connection = mysql.createConnection({
-  host: 'localhost',
-
-  // Your port; if not 3306
-  port: 3306,
-
-  // Your username
-  user: 'root',
-
-  // Your password
-  password: 'business',
-  database: 'employeetracker_DB',
-});
+const connection = require('./connection');
 
 
+const promptQuestions = () => {
+    inquirer.prompt([
+        {
+            type: 'list',
+            message: "What would you like to do?",
+            choices: [
+                'View All Employees',
+                'View All Departments',
+                'View All Roles',
+                'Add New Employee',
+                'Add New Department',
+                'Add New Role',
+                'Update Employee Role',
+                'Exit'
+            ],
+            name: 'mainMenu',
+        },
+    ])
+    .then((answer) => {
+        switch (answer.mainMenu) {
+            case 'View All Employees':
+                viewAllEmployees();
+                break;
+            case 'View All Departments':
+                viewAllDepartments();
+                break;
+            case 'View All Roles':
+                viewAllRoles();
+                break;
+            case 'Add New Employee':
+                addNewEmployee();
+                break;
+            case 'Add New Department':
+                addNewDepartment();
+                break;
+            case 'Add New Role':
+                addNewRole();
+                break;
+            case 'Update Employee Role':
+                updateEmployeeRole();
+                break;
+            case 'Exit':
+                connection.end();
+                console.log("Goodbye");
+                break;
+        }
+    });
+}
+
+
+// viewAllEmployees()
+
+// viewAllDepartments()
+
+// viewAllRoles()
+
+// addNewEmployee()
+
+// addNewDepartment()
+
+// addNewRole()
+
+// updateEmployeeRole()
 
 
 
@@ -55,13 +97,4 @@ const connection = mysql.createConnection({
 
 
 
-
-
-
-
-// connect to the mysql server and sql database
-connection.connect((err) => {
-    if (err) throw err;
-    // run the start function after the connection is made to prompt the user
-    start();
-  });
+promptQuestions();
