@@ -1,0 +1,24 @@
+{
+  "name": "12-employeetracker",
+  "version": "1.0.0",
+  "description": "a command line application for managing a company's employees using node, inquirer, and MySQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "inquirer",
+    "mysql",
+    "employee",
+    "manager",
+    "role",
+    "department"
+  ],
+  "author": "lisa pessin",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^8.0.0",
+    "mysql": "^2.18.1"
+  }
+}
