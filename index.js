@@ -1,44 +1,28 @@
 
-
-
-// View All Employees
-// View All Employees by Department
-// View All Employees by Manager **BONUS**
-// Update Employee Managers **BONUS**
-// Add Employee 
-// Remove Employee **BONUS**
-// Update Employee Role
-// Update Employee Manager **BONUS**
-// View All Roles
-// Add Role
-// Remove Role **BONUS**
-// View All Departments
-// Add Department
-// Remove Department **BONUS**
-// View Total Utilized Budget by Department **BONUS**
-// Quit
-
-
-
-
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const connection = require('./connection');
 
 
-const promptQuestions = () => {
+const mainMenu = () => {
     inquirer.prompt([
         {
             type: 'list',
             message: "What would you like to do?",
             choices: [
                 'View All Employees',
-                'View All Departments',
+                // View Employees by Department **BONUS**
+                // View Employees by Manager **BONUS**
+                'View All Departments', //(bonus show total salaries)
                 'View All Roles',
                 'Add New Employee',
+                // Remove Employee **BONUS**
                 'Add New Department',
+                // Remove Department **BONUS**
                 'Add New Role',
+                // Remove Role **BONUS**
                 'Update Employee Role',
+                // Update Employee Managers **BONUS**
                 'Exit'
             ],
             name: 'mainMenu',
@@ -76,19 +60,58 @@ const promptQuestions = () => {
 }
 
 
-// viewAllEmployees()
+const viewAllEmployees = () => {
+    // show id, first_name, last_name, title, department, salary, manager
+    const allEmployeeQuery = 
+    'SELECT id, first_name, last_name FROM employees';
+    // 'SELECT title, salary FROM roles';
+    
+    // 'SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.department_name, roles.salary FROM employees';
 
-// viewAllDepartments()
+    connection.query(allEmployeeQuery, (err, results) => {
+        if (err) throw err;
+        console.table(results);
+        mainMenu();
+    })
+};
 
-// viewAllRoles()
+const viewAllDepartments = () => {
+    // show department_id, department_name (and total salaries BONUS)
+    const allDepartmentsQuery = 'SELECT * FROM departments';
+    connection.query(allDepartmentsQuery, (err, results) => {
+        if (err) throw err;
+        console.table(results);
+        mainMenu();
+    })
+};
+
+const viewAllRoles = () => {
+    // show role_id, title, department, salary
+    const allRolesQuery = 'SELECT * FROM roles';
+    connection.query(allRolesQuery, (err, results) => {
+        if (err) throw err;
+        console.table(results);
+        mainMenu();
+    })
+};
 
 // addNewEmployee()
+    // first name?
+    // last name?
+    // role? from list
+    // manager? from list
 
 // addNewDepartment()
+    // department name?
 
 // addNewRole()
+    // role name?
+    // department?
+    // salary?
 
 // updateEmployeeRole()
+    // which employee do you want to update? from list
+    // change to which role? from list
 
 
 
@@ -96,5 +119,4 @@ const promptQuestions = () => {
 
 
 
-
-promptQuestions();
+mainMenu();

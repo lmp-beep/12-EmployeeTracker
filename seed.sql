@@ -31,7 +31,7 @@ VALUES
 -- Employees Seeds --
 INSERT INTO employees (first_name, last_name, role_id)
 VALUES 
-    ("Janet", "Van Dyne", 1),
+    ("Hope", "Van Dyne", 1),
     ("Scott", "Lang", 1),
     ("Henry", "Pym", 2),
 

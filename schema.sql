@@ -1,21 +1,3 @@
--- // DEPARTMENTS table 
--- // engineering, finance, legal, sales, hr
--- // ID - INT PRIMARY KEY
--- // NAME - VARCHAR(30) to hold department name
-
--- // ROLES table
--- // ID - INT PRIMARY KEY
--- // TITLE - VARCHAR(30) to hold role title
--- // SALARY - DECIMAL to hold role salary
--- // DEPARTMENT ID - (Foreign Key) INT to hold reference to department role belongs to
-
--- // EMPLOYEES table
--- // ID - INT PRIMARY KEY
--- // FIRST NAME - VARCHAR(30) to hold employee first name
--- // LAST NAME - VARCHAR(30) to hold employee last name
--- // ROLE ID - (Foreign Key) INT to hold reference to role employee has
--- // MANAGER ID - (Foreign Key) INT to hold reference to another employee that manages the employee being Created. This field may be null if the employee has no manager.
-
 
 DROP DATABASE IF EXISTS employeetracker_DB;
 CREATE DATABASE employeetracker_DB;
@@ -52,6 +34,7 @@ CREATE TABLE employees(
     last_name VARCHAR(30) NOT NULL,
     role_id INT NOT NULL,
     manager_id INT,
+    -- INDEX role_ind (role_id),
     PRIMARY KEY (id),
     FOREIGN KEY (role_id) REFERENCES roles(id),
     FOREIGN KEY (manager_id) REFERENCES employees(id)
