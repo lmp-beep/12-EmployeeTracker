@@ -1,10 +1,36 @@
 
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const chalk = require('chalk');
+const figlet = require('figlet');
 const connection = require('./connection');
 
 
-const mainMenu = () => {
+
+message();
+
+function message() {
+    figlet.text('Employee Management System', {
+        font: 'bulbhead',
+        horizontalLayout: 'default',
+        verticalLayout: 'default',
+        width: 100,
+        whitespaceBreak: true
+    }, function(err, data) {
+        if (err) {
+            console.log('Something went wrong...');
+            console.dir(err);
+            return;
+        }
+        console.log(chalk.cyan(data));
+        console.log("\n\nWelcome to the Employee Management System\n\n");
+        mainMenu();
+    })
+};
+
+
+
+function mainMenu() {
     inquirer.prompt([
         {
             type: 'list',
@@ -62,14 +88,15 @@ const mainMenu = () => {
 
 const viewAllEmployees = () => {
     // show id, first_name, last_name, title, department, salary, manager
-    const allEmployeeQuery = 
-    'SELECT id, first_name, last_name FROM employees';
+    const allEmployeeQuery = 'SELECT * FROM employees';
+    // 'SELECT id, first_name, last_name FROM employees';
     // 'SELECT title, salary FROM roles';
     
     // 'SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.department_name, roles.salary FROM employees';
 
     connection.query(allEmployeeQuery, (err, results) => {
         if (err) throw err;
+        console.log(chalk.green('***ALL EMPLOYEES***'));
         console.table(results);
         mainMenu();
     })
@@ -80,6 +107,7 @@ const viewAllDepartments = () => {
     const allDepartmentsQuery = 'SELECT * FROM departments';
     connection.query(allDepartmentsQuery, (err, results) => {
         if (err) throw err;
+        console.log(chalk.green('***ALL DEPARTMENTS***'));
         console.table(results);
         mainMenu();
     })
@@ -90,6 +118,7 @@ const viewAllRoles = () => {
     const allRolesQuery = 'SELECT * FROM roles';
     connection.query(allRolesQuery, (err, results) => {
         if (err) throw err;
+        console.log(chalk.green('***ALL ROLES***'));
         console.table(results);
         mainMenu();
     })
@@ -115,8 +144,8 @@ const viewAllRoles = () => {
 
 
 
+    
+  
 
 
 
-
-mainMenu();
