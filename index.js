@@ -85,14 +85,12 @@ function mainMenu() {
     });
 }
 
-
+// *****NEEDS MANAGER NAME*********************************************
 const viewAllEmployees = () => {
-    // show id, first_name, last_name, title, department, salary, manager
-    const allEmployeeQuery = 'SELECT * FROM employees';
-    // 'SELECT id, first_name, last_name FROM employees';
-    // 'SELECT title, salary FROM roles';
-    
-    // 'SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.department_name, roles.salary FROM employees';
+    // show employee_id, first_name, last_name, title, salary, department, manager
+    const allEmployeeQuery = `SELECT employees.employee_id, employees.first_name, employees.last_name, roles.title, roles.salary, departments.department_name FROM employees
+    INNER JOIN roles on roles.role_id = employees.role_id
+    INNER JOIN departments on departments.department_id = roles.department_id`;
 
     connection.query(allEmployeeQuery, (err, results) => {
         if (err) throw err;
@@ -104,7 +102,7 @@ const viewAllEmployees = () => {
 
 const viewAllDepartments = () => {
     // show department_id, department_name (and total salaries BONUS)
-    const allDepartmentsQuery = 'SELECT * FROM departments';
+    const allDepartmentsQuery = `SELECT departments.department_id, departments.department_name FROM departments`;
     connection.query(allDepartmentsQuery, (err, results) => {
         if (err) throw err;
         console.log(chalk.green('***ALL DEPARTMENTS***'));
@@ -115,7 +113,9 @@ const viewAllDepartments = () => {
 
 const viewAllRoles = () => {
     // show role_id, title, department, salary
-    const allRolesQuery = 'SELECT * FROM roles';
+    const allRolesQuery = `SELECT roles.role_id, roles.title, roles.salary, departments.department_name FROM roles
+    
+    INNER JOIN departments on departments.department_id = roles.department_id`;
     connection.query(allRolesQuery, (err, results) => {
         if (err) throw err;
         console.log(chalk.green('***ALL ROLES***'));
