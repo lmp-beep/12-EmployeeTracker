@@ -5,7 +5,7 @@ const chalk = require('chalk');
 const figlet = require('figlet');
 const connection = require('./connection');
 
-const deptIds = [];
+// const deptIds = [];
 
 
 
@@ -44,12 +44,12 @@ function mainMenu() {
                 // View Employees by Manager **BONUS**
                 'View All Departments', //(bonus show total salaries)
                 'View All Roles',
-                'Add New Employee',
-                // Remove Employee **BONUS**
                 'Add New Department',
-                // Remove Department **BONUS**
+                'Remove Department',
                 'Add New Role',
                 // Remove Role **BONUS**
+                'Add New Employee',
+                // Remove Employee **BONUS**
                 'Update Employee Role',
                 // Update Employee Managers **BONUS**
                 'Exit'
@@ -62,6 +62,12 @@ function mainMenu() {
             case 'View All Employees':
                 viewAllEmployees();
                 break;
+            // case 'View Employees by Department':
+            //     viewEmployeesByDept();
+            //     break;
+            // case 'View Employees by Manager':
+            //     viewEmployeesByManager();
+            //     break;
             case 'View All Departments':
                 viewAllDepartments();
                 break;
@@ -71,15 +77,27 @@ function mainMenu() {
             case 'Add New Department':
                 addNewDepartment();
                 break;
+            case 'Remove Department':
+                removeDepartment();
+                break;
             case 'Add New Role':
                 addNewRole();
                 break;
+            // case 'Remove Role':
+            //     removeRole();
+            //     break;
             case 'Add New Employee':
                 addNewEmployee();
                 break;
+            // case 'Remove Employee':
+            //     removeEmployee();
+            //     break;
             case 'Update Employee Role':
                 updateEmployeeRole();
                 break;
+            // case 'Update Employee Managers':
+            //     updateEmployeeManagers();
+            //     break;   
             case 'Exit':
                 connection.end();
                 console.log("Goodbye");
@@ -94,7 +112,7 @@ const viewAllEmployees = () => {
     const allEmployeeQuery = `SELECT employees.employee_id, employees.first_name, employees.last_name, employees.manager_id, roles.title, roles.salary, departments.department_name FROM employees
     INNER JOIN roles on roles.role_id = employees.role_id
     INNER JOIN departments on departments.department_id = roles.department_id`;
-    // INNER JOIN employees on employees.manager_id = employees.last_name`;
+    // FULL JOIN employees on employees.manager_id = employees.last_name
 
     connection.query(allEmployeeQuery, (err, results) => {
         if (err) throw err;
@@ -103,6 +121,10 @@ const viewAllEmployees = () => {
         mainMenu();
     })
 };
+
+// viewEmployeesByDept()
+
+// viewEmployeesByManager()
 
 const viewAllDepartments = () => {
     // show department_id, department_name (and total salaries BONUS)
@@ -151,8 +173,38 @@ const addNewDepartment = () => {
         );
     });
 };
+
+const removeDepartment = () => {
+    connection.query('SELECT * FROM departments', function (err, res) {
+        if (err) throw err;
+        const dept = res.map(element => {
+            return element.department_name
+        })
+        inquirer.prompt([
+            {
+                name: 'removeDepartment',
+                type: 'list',
+                message: "What department would you like to remove?",
+                choices: dept,
+            }
+        ])
+        .then((answer) => {
+            connection.query(
+                'DELETE FROM departments WHERE ?',
+                {
+                    department_name: answer.removeDepartment,
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log("The department has been removed successfully!");
+                    viewAllDepartments();
+                }
+            );
+        });
+    })
+};
    
-// *****JOIN DEPT ID and DEPT NAME*******************************************
+// *****JOIN DEPT ID and DEPT NAME*************************************
 const addNewRole = () => {
     connection.query('SELECT * FROM departments', function (err, res) {
         if (err) throw err;
@@ -195,7 +247,7 @@ const addNewRole = () => {
     })
 };
 
-
+// removeRole()
 
 
 // addNewEmployee()
@@ -204,9 +256,13 @@ const addNewRole = () => {
     // role? from list
     // manager? from list
 
+// removeEmployee()
+
 // updateEmployeeRole()
     // which employee do you want to update? from list
     // change to which role? from list
+
+// updateEmployeeManagers()
 
 
 
