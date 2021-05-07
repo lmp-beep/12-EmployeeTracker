@@ -32,20 +32,20 @@ VALUES
 -- Employees Seeds --
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES 
-    ("Hope", "Van Dyne", 1, NULL),
-    ("Henry", "Pym", 2, 1),
+    ("Hope", "Van Dyne", 1, 2),
+    ("Henry", "Pym", 2, NULL),
 
-    ("Frank", "Castle", 3, NULL),
-    ("Steve", "Rogers", 4, 3),
+    ("Frank", "Castle", 3, 4),
+    ("Steve", "Rogers", 4, NULL),
 
-    ("Anthony", "Stark", 5, NULL),
-    ("Victor", "Shade", 6, 5),
+    ("Anthony", "Stark", 5, 6),
+    ("Victor", "Shade", 6, NULL),
     
-    ("Scott", "Lang", 7, NULL),
-    ("Henry", "McCoy", 8, 7),
+    ("Scott", "Lang", 7, 8),
+    ("Henry", "McCoy", 8, NULL),
 
-    ("Carol", "Danvers", 9, NULL),
-    ("Wade", "Wilson", 10, 9);
+    ("Carol", "Danvers", 9, 10),
+    ("Wade", "Wilson", 10, NULL);
 
 
     -- UPDATE MANAGER ID --

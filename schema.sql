@@ -39,3 +39,4 @@ CREATE TABLE employees(
     FOREIGN KEY (manager_id) REFERENCES employees(employee_id)
 );
 
+

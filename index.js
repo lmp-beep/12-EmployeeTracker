@@ -102,12 +102,14 @@ function mainMenu() {
     });
 }
 
-// *****NEEDS MANAGER NAME*********************************************
+
 const viewAllEmployees = () => {
-  const allEmployeeQuery = `SELECT employees.employee_id, employees.first_name, employees.last_name, employees.manager_id, roles.title, roles.salary, departments.department_name FROM employees
-    INNER JOIN roles on roles.role_id = employees.role_id
-    INNER JOIN departments on departments.department_id = roles.department_id`;
-  //   LEFT JOIN employees on employees.manager_id = employee.first_name, employees.last_name
+  const allEmployeeQuery = "SELECT e.employee_id, e.first_name, e.last_name, title, salary, department_name, " +
+  "e2.first_name AS manager_first_name, e2.last_name AS manager_last_name " +
+  "FROM employees AS E " +
+  "INNER JOIN roles AS C ON E.role_id = c.role_id " +
+  "INNER JOIN departments AS D ON C.department_id = d.department_id " +
+  "LEFT JOIN employees AS E2 ON E.manager_id = E2.employee_id;";
   connection.query(allEmployeeQuery, (err, results) => {
     if (err) throw err;
     console.log(chalk.green("***ALL EMPLOYEES***"));
@@ -115,6 +117,7 @@ const viewAllEmployees = () => {
     mainMenu();
   });
 };
+
 
 // viewEmployeesByDept()
 
