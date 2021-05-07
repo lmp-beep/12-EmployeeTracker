@@ -1,9 +1,11 @@
+// Required Dependencies .........................................
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const figlet = require("figlet");
 const connection = require("./connection");
 
+// Welcome Message FIGLET........................................
 message();
 function message() {
   figlet.text(
@@ -28,6 +30,7 @@ function message() {
   );
 }
 
+// Main Menu Questions...........................................
 function mainMenu() {
   inquirer
     .prompt([
@@ -36,9 +39,7 @@ function mainMenu() {
         message: "What would you like to do?",
         choices: [
           "View All Employees",
-          // View Employees by Department **BONUS**
-          // View Employees by Manager **BONUS**
-          "View All Departments", //(bonus show total salaries)
+          "View All Departments",
           "View All Roles",
           "Add New Department",
           "Remove Department",
@@ -47,7 +48,6 @@ function mainMenu() {
           "Add New Employee",
           "Remove Employee",
           "Update Employee Role",
-          // Update Employee Managers **BONUS**
           "Exit",
         ],
         name: "mainMenu",
@@ -58,12 +58,6 @@ function mainMenu() {
         case "View All Employees":
           viewAllEmployees();
           break;
-        // case 'View Employees by Department':
-        //     viewEmployeesByDept();
-        //     break;
-        // case 'View Employees by Manager':
-        //     viewEmployeesByManager();
-        //     break;
         case "View All Departments":
           viewAllDepartments();
           break;
@@ -91,9 +85,6 @@ function mainMenu() {
         case "Update Employee Role":
           updateEmployeeRole();
           break;
-        // case 'Update Employee Managers':
-        //     updateEmployeeManagers();
-        //     break;
         case "Exit":
           connection.end();
           console.log("Goodbye");
@@ -102,14 +93,15 @@ function mainMenu() {
     });
 }
 
-
+// VIEW FUNCTIONS................................................
 const viewAllEmployees = () => {
-  const allEmployeeQuery = "SELECT e.employee_id, e.first_name, e.last_name, title, salary, department_name, " +
-  "e2.first_name AS manager_first_name, e2.last_name AS manager_last_name " +
-  "FROM employees AS E " +
-  "INNER JOIN roles AS C ON E.role_id = c.role_id " +
-  "INNER JOIN departments AS D ON C.department_id = d.department_id " +
-  "LEFT JOIN employees AS E2 ON E.manager_id = E2.employee_id;";
+  const allEmployeeQuery =
+    "SELECT e.employee_id AS Employee_ID, e.first_name AS First_Name, e.last_name AS Last_Name, title AS Title, salary AS Salary, department_name AS Department, " +
+    "e2.first_name AS Manager_First_Name, e2.last_name AS Manager_Last_Name " +
+    "FROM employees AS E " +
+    "INNER JOIN roles AS C ON E.role_id = c.role_id " +
+    "INNER JOIN departments AS D ON C.department_id = d.department_id " +
+    "LEFT JOIN employees AS E2 ON E.manager_id = E2.employee_id;";
   connection.query(allEmployeeQuery, (err, results) => {
     if (err) throw err;
     console.log(chalk.green("***ALL EMPLOYEES***"));
@@ -118,14 +110,8 @@ const viewAllEmployees = () => {
   });
 };
 
-
-// viewEmployeesByDept()
-
-// viewEmployeesByManager()
-
-// *****ADD salaries for BONUS******************************
 const viewAllDepartments = () => {
-  const allDepartmentsQuery = `SELECT departments.department_id, departments.department_name FROM departments`;
+  const allDepartmentsQuery = `SELECT departments.department_id AS Department_ID, departments.department_name AS Department FROM departments`;
   connection.query(allDepartmentsQuery, (err, results) => {
     if (err) throw err;
     console.log(chalk.green("***ALL DEPARTMENTS***"));
@@ -135,7 +121,7 @@ const viewAllDepartments = () => {
 };
 
 const viewAllRoles = () => {
-  const allRolesQuery = `SELECT roles.role_id, roles.title, roles.salary, departments.department_name FROM roles
+  const allRolesQuery = `SELECT roles.role_id AS Title_ID, roles.title AS Title, roles.salary AS Salary, departments.department_name AS Department FROM roles
     INNER JOIN departments on departments.department_id = roles.department_id`;
   connection.query(allRolesQuery, (err, results) => {
     if (err) throw err;
@@ -145,6 +131,7 @@ const viewAllRoles = () => {
   });
 };
 
+// ADD/REMOVE DEPARTMENTS.......................................
 const addNewDepartment = () => {
   inquirer
     .prompt([
@@ -204,6 +191,7 @@ const removeDepartment = () => {
   });
 };
 
+// ADD/REMOVE ROLES............................................
 const addNewRole = () => {
   connection.query("SELECT * FROM departments", function (err, res) {
     if (err) throw err;
@@ -278,6 +266,7 @@ const removeRole = () => {
   });
 };
 
+// ADD/REMOVE EMPLOYEES.......................................
 const addNewEmployee = () => {
   connection.query("SELECT * FROM roles", function (err, res) {
     if (err) throw err;
@@ -364,6 +353,7 @@ const removeEmployee = () => {
   });
 };
 
+// UPDATE EMPLOYEES..........................................
 const updateEmployeeRole = () => {
   connection.query("SELECT * FROM employees", function (err, res) {
     if (err) throw err;
@@ -415,5 +405,3 @@ const updateEmployeeRole = () => {
     });
   });
 };
-
-// updateEmployeeManagers()

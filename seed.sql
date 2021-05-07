@@ -28,7 +28,6 @@ VALUES
     ("Web Designer", 100000, 5);
     
 
-
 -- Employees Seeds --
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES 
@@ -46,9 +45,6 @@ VALUES
 
     ("Carol", "Danvers", 9, 10),
     ("Wade", "Wilson", 10, NULL);
-
-
-    -- UPDATE MANAGER ID --
 
 
 -- Viewing Tables --
