@@ -45,7 +45,7 @@ function mainMenu() {
           "Add New Role",
           "Remove Role",
           "Add New Employee",
-          // Remove Employee **BONUS**
+          "Remove Employee",
           "Update Employee Role",
           // Update Employee Managers **BONUS**
           "Exit",
@@ -79,15 +79,15 @@ function mainMenu() {
         case "Add New Role":
           addNewRole();
           break;
-        case 'Remove Role':
-            removeRole();
-            break;
+        case "Remove Role":
+          removeRole();
+          break;
         case "Add New Employee":
           addNewEmployee();
           break;
-        // case 'Remove Employee':
-        //     removeEmployee();
-        //     break;
+        case "Remove Employee":
+          removeEmployee();
+          break;
         case "Update Employee Role":
           updateEmployeeRole();
           break;
@@ -102,15 +102,12 @@ function mainMenu() {
     });
 }
 
-
-
-
 // *****NEEDS MANAGER NAME*********************************************
 const viewAllEmployees = () => {
   const allEmployeeQuery = `SELECT employees.employee_id, employees.first_name, employees.last_name, employees.manager_id, roles.title, roles.salary, departments.department_name FROM employees
     INNER JOIN roles on roles.role_id = employees.role_id
     INNER JOIN departments on departments.department_id = roles.department_id`;
-//   LEFT JOIN employees on employees.manager_id = employee.first_name, employees.last_name
+  //   LEFT JOIN employees on employees.manager_id = employee.first_name, employees.last_name
   connection.query(allEmployeeQuery, (err, results) => {
     if (err) throw err;
     console.log(chalk.green("***ALL EMPLOYEES***"));
@@ -119,12 +116,9 @@ const viewAllEmployees = () => {
   });
 };
 
-
 // viewEmployeesByDept()
 
-
 // viewEmployeesByManager()
-
 
 // *****ADD salaries for BONUS******************************
 const viewAllDepartments = () => {
@@ -137,7 +131,6 @@ const viewAllDepartments = () => {
   });
 };
 
-
 const viewAllRoles = () => {
   const allRolesQuery = `SELECT roles.role_id, roles.title, roles.salary, departments.department_name FROM roles
     INNER JOIN departments on departments.department_id = roles.department_id`;
@@ -148,7 +141,6 @@ const viewAllRoles = () => {
     mainMenu();
   });
 };
-
 
 const addNewDepartment = () => {
   inquirer
@@ -168,12 +160,13 @@ const addNewDepartment = () => {
         (err) => {
           if (err) throw err;
           viewAllDepartments();
-          console.log(chalk.red("Your new department was created successfully!"));
+          console.log(
+            chalk.red("Your new department was created successfully!")
+          );
         }
       );
     });
 };
-
 
 const removeDepartment = () => {
   connection.query("SELECT * FROM departments", function (err, res) {
@@ -199,13 +192,14 @@ const removeDepartment = () => {
           (err) => {
             if (err) throw err;
             viewAllDepartments();
-            console.log(chalk.red("The department has been removed successfully!"));
+            console.log(
+              chalk.red("The department has been removed successfully!")
+            );
           }
         );
       });
   });
 };
-
 
 const addNewRole = () => {
   connection.query("SELECT * FROM departments", function (err, res) {
@@ -250,52 +244,122 @@ const addNewRole = () => {
   });
 };
 
-
 const removeRole = () => {
-    connection.query("SELECT * FROM roles", function (err, res) {
-      if (err) throw err;
-      const role = res.map((element) => {
-        return element.title;
-      });
-      inquirer
-        .prompt([
-          {
-            name: "removeRole",
-            type: "list",
-            message: "What role would you like to remove?",
-            choices: role,
-          },
-        ])
-        .then((answer) => {
-          connection.query(
-            "DELETE FROM roles WHERE ?",
-            {
-              title: answer.removeRole,
-            },
-            (err) => {
-              if (err) throw err;
-              viewAllRoles();
-              console.log(chalk.red("The role has been removed successfully!"));
-            }
-          );
-        });
+  connection.query("SELECT * FROM roles", function (err, res) {
+    if (err) throw err;
+    const role = res.map((element) => {
+      return element.title;
     });
-  };
+    inquirer
+      .prompt([
+        {
+          name: "removeRole",
+          type: "list",
+          message: "What role would you like to remove?",
+          choices: role,
+        },
+      ])
+      .then((answer) => {
+        connection.query(
+          "DELETE FROM roles WHERE ?",
+          {
+            title: answer.removeRole,
+          },
+          (err) => {
+            if (err) throw err;
+            viewAllRoles();
+            console.log(chalk.red("The role has been removed successfully!"));
+          }
+        );
+      });
+  });
+};
 
+const addNewEmployee = () => {
+  connection.query("SELECT * FROM roles", function (err, res) {
+    if (err) throw err;
+    const empRole = res.map((element) => {
+      return { name: element.title, value: element.role_id };
+    });
+    inquirer
+      .prompt([
+        {
+          name: "newEmployeeFirstName",
+          type: "input",
+          message: "What is the first name of the new employee?",
+        },
+        {
+          name: "newEmployeeLastName",
+          type: "input",
+          message: "What is the last name of the new employee?",
+        },
+        {
+          name: "newEmployeeRole",
+          type: "list",
+          message: "What role is the new employee in?",
+          choices: empRole,
+        },
+        //   {
+        //     name: "newEmployeeManager",
+        //     type: "input",
+        //     message: "Who is the manager of the new employee?",
+        //     choices:
+        //   },
+      ])
+      .then((answer) => {
+        connection.query(
+          `INSERT INTO employees SET ?`,
+          {
+            first_name: answer.newEmployeeFirstName,
+            last_name: answer.newEmployeeLastName,
+            role_id: answer.newEmployeeRole,
+            //   manager_id: answer.newEmployeeManager,
+          },
+          (err) => {
+            if (err) throw err;
+            viewAllEmployees();
+            console.log(chalk.red("Your new employee was added successfully!"));
+          }
+        );
+      });
+  });
+};
 
-// addNewEmployee()
-// first name?
-// last name?
-// role? from list
-// manager? from list
+const removeEmployee = () => {
+  connection.query("SELECT * FROM employees", function (err, res) {
+    if (err) throw err;
+    const employee = res.map((element) => {
+        return { name: element.first_name + " " + element.last_name, value: element.employee_id };
+    });
+    inquirer
+      .prompt([
+        {
+          name: "removeEmployee",
+          type: "list",
+          message: "Which employee would you like to remove?",
+          choices: employee,
+        },
+      ])
+      .then((answer) => {
+        connection.query(
+          "DELETE FROM employees WHERE ?",
+          {
+              employee_id: answer.removeEmployee
+          },
+          (err) => {
+            if (err) throw err;
+            viewAllEmployees();
+            console.log(chalk.red("The employee has been removed successfully!"));
+          }
+        );
+      });
+  });
+};
 
-
-// removeEmployee()
 
 
 // updateEmployeeRole()
 // which employee do you want to update? from list
 // change to which role? from list
-
 
 // updateEmployeeManagers()
