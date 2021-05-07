@@ -329,7 +329,10 @@ const removeEmployee = () => {
   connection.query("SELECT * FROM employees", function (err, res) {
     if (err) throw err;
     const employee = res.map((element) => {
-        return { name: element.first_name + " " + element.last_name, value: element.employee_id };
+      return {
+        name: element.first_name + " " + element.last_name,
+        value: element.employee_id,
+      };
     });
     inquirer
       .prompt([
@@ -344,22 +347,70 @@ const removeEmployee = () => {
         connection.query(
           "DELETE FROM employees WHERE ?",
           {
-              employee_id: answer.removeEmployee
+            employee_id: answer.removeEmployee,
           },
           (err) => {
             if (err) throw err;
             viewAllEmployees();
-            console.log(chalk.red("The employee has been removed successfully!"));
+            console.log(
+              chalk.red("The employee has been removed successfully!")
+            );
           }
         );
       });
   });
 };
 
-
-
-// updateEmployeeRole()
-// which employee do you want to update? from list
-// change to which role? from list
+const updateEmployeeRole = () => {
+  connection.query("SELECT * FROM employees", function (err, res) {
+    if (err) throw err;
+    const employeeList = res.map((element) => {
+      return {
+        name: element.first_name + " " + element.last_name,
+        value: element.employee_id,
+      };
+    });
+    connection.query("SELECT * FROM roles", function (err, res) {
+      if (err) throw err;
+      const rolesList = res.map((element) => {
+        return {
+          name: element.title,
+          value: element.role_id,
+        };
+      });
+      inquirer
+        .prompt([
+          {
+            name: "updateEmployee",
+            type: "list",
+            message: "Which employee would you like to update?",
+            choices: employeeList,
+          },
+          {
+            name: "updateEmployeeRole",
+            type: "list",
+            message: "Choose a new role for this employee:",
+            choices: rolesList,
+          },
+        ])
+        .then((answer) => {
+          connection.query(
+            `UPDATE employees SET role_id = ${answer.updateEmployeeRole} WHERE employee_id = ${answer.updateEmployee}`,
+            {
+              role_id: answer.updateEmployeeRole,
+              employee_id: answer.updateEmployee,
+            },
+            (err) => {
+              if (err) throw err;
+              viewAllEmployees();
+              console.log(
+                chalk.red("The employee's role has been changed successfully!")
+              );
+            }
+          );
+        });
+    });
+  });
+};
 
 // updateEmployeeManagers()
