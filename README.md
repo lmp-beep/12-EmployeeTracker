@@ -45,7 +45,7 @@ This is a command line application that runs with Node.js to build a Content Man
 <br/><br/>
 
 ## Instructional Video
-
+![](https://github.com/lmp-beep/12-EmployeeTracker/blob/e1fc5ebef3a619b07a2c30fb5bac5edf383a4579/assets/InstructionalVideo.gif)
 ***
 <br/><br/>
 
